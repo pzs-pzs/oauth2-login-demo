@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import com.example.demo.api.GithubUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,9 +15,10 @@ import org.springframework.web.client.RestTemplate;
 public class HomeController {
 
 
+
     @GetMapping("/")
     public String home(){
-        return "login";
+        return "home";
     }
 
     @Qualifier("oauth2ClientContext")
@@ -30,8 +33,11 @@ public class HomeController {
         String url = "https://api.github.com/user?access_token="+oauth2ClientContext.getAccessToken();
         System.out.println(oauth2ClientContext.getAccessToken());
         GithubUser s = restTemplate.getForObject(url,GithubUser.class);
+        s.setStatus(1);
         return s;
     }
+
+
 
     @GetMapping("/test")
     @ResponseBody
@@ -39,7 +45,14 @@ public class HomeController {
         return "success";
     }
 
+    @GetMapping("/toLoginPage")
+    public String toLoginPage() {
+        return "login-demo";
+    }
 
-
+    @GetMapping("/toRegisterPage")
+    public String toRegisterPage() {
+        return "register-demo";
+    }
 
 }

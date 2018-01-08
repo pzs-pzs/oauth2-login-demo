@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.css" th:href="'/bootstrap/css/bootstrap.css'">
+
+    <meta charset="UTF-8"/>
+    <title>Register</title>
+</head>
+<body>
+    <form class="form-horizontal col-md-10" role="form" style="padding-top: 10%" action="/register" method="post">
+        <div class="form-group">
+            <label for="username" class="col-sm-2 control-label" style="font-size: 20px">username</label>
+            <div class="col-md-6">
+                <input type="text" class="form-control" id="username" name="username" placeholder="input username">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="password" class="col-sm-2 control-label" style="font-size: 20px">password</label>
+            <div class="col-md-6">
+                <input type="password" class="form-control" id="password" name="password" placeholder="input password">
+            </div>
+        </div>
+        <!--<div class="form-group">-->
+            <!--<div class="col-md-offset-2 col-md-6">-->
+                <!--<div class="checkbox">-->
+                    <!--<label>-->
+                        <!--<input type="checkbox" name="remember-me">remember-me-->
+                    <!--</label>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default">Register</button>
+            </div>
+        </div>
+    </form>
+
+
+</body>
+</html>

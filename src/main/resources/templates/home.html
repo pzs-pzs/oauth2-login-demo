@@ -1,23 +1,43 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.css" th:href="'/bootstrap/css/bootstrap.css'">
     <script src="../static/jquery/jquery-3.2.1.js" th:src="'/jquery/jquery-3.2.1.js'"></script>
     <script src="../static/js/home.js" th:src="'/js/home.js'"></script>
     <meta charset="UTF-8"/>
     <title>Home</title>
 </head>
-<body onload="github_profile()">
-    <div class="container unauthenticated">
-        With Github: <a href="/github/login">click here to login with github</a>
-    </div>
-    <div class="container authenticated" id="github" style="display : none">
-        <img id="pic" src="" alt="200*300" height="200px" width="200px"/>
-        Logged in as: <span id="user"></span>
-    </div>
-    <br/>
-    <div>
-        <a href="/logout">logout</a>
-    </div>
+<body>
+  <div class="row" style="padding-top: 10%">
+      <div class="col-md-2"></div>
+      <div class="col-md-3">
+          <a href="login-demo.html" th:href="'/toLoginPage'"><label class="label label-info" style="font-size: 30px">Login</label></a>
+      </div>
+      <div class="col-md-3">
+          <a href="/logout"><label class="label label-info" style="font-size: 30px">Logout</label></a>
+      </div>
+      <div class="col-md-3">
+          <a href="register-demo.html" th:href="'/toRegisterPage'"><label class="label label-info" style="font-size: 30px">register</label></a>
+      </div>
+
+
+  </div>
+  <table th:if="${#authentication.getName()}!='anonymousUser'" class="table table-hover">
+      <thead>
+      <tr>
+          <th>username</th>
+          <th>role</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+          <td sec:authentication="name">Tanmay</td>
+          <td sec:authorize="hasRole('USER')">user</td>
+      </tr>
+      </tbody>
+  </table>
+
 
 </body>
 </html>

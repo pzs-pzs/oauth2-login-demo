@@ -12,6 +12,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
@@ -32,26 +34,41 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // @formatter:off
-        http.authorizeRequests()
+        http.authorizeRequests()//验证请求
                 .antMatchers("/", "/github**", "/jquery/**","/js/**","/css/**","/bootstrap/**").permitAll()
-                .antMatchers("/images/**","/assets/**").permitAll()
-                .anyRequest()
-                .authenticated()
+                .antMatchers("/images/**","/assets/**","/register").permitAll()
+                .antMatchers("/register").permitAll()
+                .antMatchers("/toLoginPage","/toRegisterPage").permitAll()
+                .anyRequest()//所有请求
+                .authenticated()//需要被验证
+                .and()
+                .rememberMe()
+                .rememberMeCookieName("pzs")//记住密码的cookie名字，默认是和rememberMeParameter一致
+                .key("INTERNAL_SECRET_KEY")//用来辨别分辨不同项目的cookie
+                .rememberMeParameter("remember-me")//请求参数名字，默认是remember-me
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/"))
                 .and()
-                .logout().logoutUrl("/logout")
+                .logout()//登出
+                .logoutUrl("/logout")
                 .logoutSuccessUrl("/").permitAll()
-//                .and().csrf()
-//                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .clearAuthentication(true)//清理登录用户，默认是true
+                .deleteCookies("pzs")//清理cookie
                 .and()
-                .formLogin()
-                .loginPage("/login")
+                .csrf()//跨站请求伪造
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .and()
+                .formLogin()//登录
+                .loginPage("/login").permitAll()
+                .usernameParameter("username")
+                .passwordParameter("password")
                 .defaultSuccessUrl("/")
+                .failureUrl("/")
                 .and()
                 .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
-                 http.csrf().disable();
+
+        http.csrf().disable();
 
         // @formatter:on
     }
@@ -94,10 +111,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new ResourceServerProperties();
     }
 
+//    @Autowired
+//    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+//        auth
+//                .inMemoryAuthentication()
+//                .withUser("user").password("1234").roles("USER");
+//    }
+
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .inMemoryAuthentication()
-                .withUser("user").password("1234").roles("USER");
+    private UserDetailsService userDetailsService;
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder(4));
     }
+
+
 }

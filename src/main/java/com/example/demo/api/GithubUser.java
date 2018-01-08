@@ -1,6 +1,7 @@
 package com.example.demo.api;
 
 public class GithubUser {
+    private int status;
     private String login;
     private String avatar_url;
 
@@ -18,5 +19,13 @@ public class GithubUser {
 
     public void setAvatar_url(String avatar_url) {
         this.avatar_url = avatar_url;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

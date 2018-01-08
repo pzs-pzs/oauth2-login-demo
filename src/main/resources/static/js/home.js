@@ -17,13 +17,14 @@ function github_profile() {
     });
 
 
-    // $.get("/demo", function(data) {
-    //     $("#user").html(data['login'])
-    //     // $("#pic").src=data['avatar_url'];
-    //     $('#pic').attr('src', data['avatar_url']);
-    //
-    //     $("#github").show();
-    // });
+    $.get("/demo", function(data) {
+        // $("#pic").src=data['avatar_url'];
+        if(data['status']==1){
+            $('#pic').attr('src', data['avatar_url']);
+            $("#user").show();
+        }
+
+    });
 }
 
 function getCookie(c_name) {
